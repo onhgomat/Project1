@@ -1,78 +1,51 @@
-let startBtn = document.getElementById('start');
-let stopBtn = document.getElementById('stop');
-let resetBtn = document.getElementById('reset');
+let gameBoard = [];
+let currentPlayer = "X";
+let gameOver = false;
 
-let hour = 00;
-let minute = 00;
-let second = 00;
-let count = 00;
-
-startBtn.addEventListener('click', function () {
-    timer = true;
-    stopWatch();
-});
-
-stopBtn.addEventListener('click', function () {
-    timer = false;
-});
-
-resetBtn.addEventListener('click', function () {
-    timer = false;
-    hour = 0;
-    minute = 0;
-    second = 0;
-    count = 0;
-    document.getElementById('hr').innerHTML = "00";
-    document.getElementById('min').innerHTML = "00";
-    document.getElementById('sec').innerHTML = "00";
-    document.getElementById('count').innerHTML = "00";
-});
-
-function stopWatch() {
-    if (timer) {
-        count++;
-
-        if (count == 100) {
-            second++;
-            count = 0;
+// Initialize game board
+for (let i = 0; i < 9; i++) {
+    gameBoard.push("");
+    document.getElementById("cell-" + i).addEventListener("click", function() {
+        if (!gameOver) {
+            playMove(i);
         }
+    });
+}
 
-        if (second == 60) {
-            minute++;
-            second = 0;
+// Play a move
+function playMove(cellIndex) {
+    if (gameBoard[cellIndex] === "") {
+        gameBoard[cellIndex] = currentPlayer;
+        document.getElementById("cell-" + cellIndex).innerHTML = currentPlayer;
+        checkWin();
+        currentPlayer = (currentPlayer === "X") ? "O" : "X";
+    }
+}
+
+// Check for a win
+function checkWin() {
+    let winConditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
+
+    for (let i = 0; i < winConditions.length; i++) {
+        let condition = winConditions[i];
+        if (gameBoard[condition[0]] !== "" && gameBoard[condition[0]] === gameBoard[condition[1]] && gameBoard[condition[1]] === gameBoard[condition[2]]) {
+            alert("Player " + gameBoard[condition[0]] + " wins!");
+            gameOver = true;
+            return;
         }
+    }
 
-        if (minute == 60) {
-            hour++;
-            minute = 0;
-            second = 0;
-        }
-
-        let hrString = hour;
-        let minString = minute;
-        let secString = second;
-        let countString = count;
-
-        if (hour < 10) {
-            hrString = "0" + hrString;
-        }
-
-        if (minute < 10) {
-            minString = "0" + minString;
-        }
-
-        if (second < 10) {
-            secString = "0" + secString;
-        }
-
-        if (count < 10) {
-            countString = "0" + countString;
-        }
-
-        document.getElementById('hr').innerHTML = hrString;
-        document.getElementById('min').innerHTML = minString;
-        document.getElementById('sec').innerHTML = secString;
-        document.getElementById('count').innerHTML = countString;
-        setTimeout(stopWatch, 10);
+    if (!gameBoard.includes("")) {
+        alert("It's a draw!");
+        gameOver = true;
     }
 }
