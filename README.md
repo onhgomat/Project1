@@ -1,3 +1,3 @@
-# Stopwatch
-This is a stopwatch mini project which I have created using html,javascript,css
+#TICTACTOE
+A small project which I have created using html,javascript,css
 #prodigyinfotech
